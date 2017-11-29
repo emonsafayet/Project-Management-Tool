@@ -40,6 +40,7 @@ C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Proj
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\bin\Microsoft.AI.Web.xml
+C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\obj\Debug\ProjectManagmentTool.csprojResolveAssemblyReference.cache
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\obj\Debug\ProjectManagmentTool.csproj.CoreCompileInputs.cache
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\obj\Debug\ProjectManagmentTool.dll
 C:\Users\safayet\Documents\Visual Studio 2017\Projects\ProjectManagmentTool\Project ManagmentTool\ProjectManagmentTool\obj\Debug\ProjectManagmentTool.pdb

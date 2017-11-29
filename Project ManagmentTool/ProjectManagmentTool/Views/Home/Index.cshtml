@@ -14,34 +14,108 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Designation</th>
-                <th>Status</th>
-                <th>Reset Password</th>
                 <th>Action(Edit)</th>
-                <th>Action(Delete)</th>               
+                <th>Action(Delete)</th>
             </tr>
         </thead>
         <tbody id="SetUserList">
             <tr id="LoadingStatus"></tr>
         </tbody>
     </table>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h4 id="ModalTitle"></h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form">
+                        <fieldset id="SubmitForm">
+                            @Html.HiddenFor(m=>m.userId,new { @id = "userId" } )
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.userName, new { @id = "userName", @class = "form-controler", @placeholder = "Name*" })
+                            </div>
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.userEmail, new { @id = "userEmail", @class = "form-controler", @placeholder = "email*" })
+                            </div>                            
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.userPassword, new { @id = "userPassword", @class = "form-controler", @placeholder = "userPassword*" })
+                            </div>
+                            <div class="form-group">
+                                <span>Active/Deactive</span>@Html.CheckBoxFor(m => m.status, new { @checked = "status", @class = "form-controler" } )
+                            </div>
+                            <div class="form-group">
+                               @Html.DropDownListFor(m=>m.designationId,ViewBag.ListOfDesignation as SelectList,"--Select Designation--",new { @id="DropDown",@class="form-control" })
+                            </div>
+                            <div class="form-group">
+                               <a href="#" class="btn btn-block btn-danger" id="SaveUserRecord">Save</a>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     $('#LoadingStatus').html("Loading......");
     $.get("/Home/GetUserList", null, DataBind);
-    function DataBind(UserList)
-    {
+    function DataBind(UserList) {
         var SetData = $("#SetUserList");
         for (var i = 0; i < UserList.length; i++) {
             var Data = "<tr class ='row_ " + UserList[i].userId + "' >" +
                 "<td>" + UserList[i].userName + "</td>" +
                 "<td>" + UserList[i].userEmail + "</td>" +
-                "<td>" + UserList[i].userPassword + "</td>" +
                 "<td>" + UserList[i].designationName + "</td>" +
-                "<td>" +"<a href='#' class='btn btn-warning' onclick='EditUserRecord()'><span class='glyphicon glyphicon-edit'></span></a>"+ "</td>" +
-                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteUserRecord()'><span class='glyphicon glyphicon-trash'></span></a>"+ "</td>" +
+                //"<td>" + UserList[i].userPassword + "</td>" +
+                //"<td>" + UserList[i].status + "</td>" +              
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditUserRecord(" + UserList[i].userId +")'><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteUserRecord(" + UserList[i].userId +")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
                 "</tr>";
-                    SetData.append(Data);
-                    $('#LoadingStatus').html(" ");
+            SetData.append(Data);
+            $('#LoadingStatus').html(" ");
         }
     }
+    //show The popUp Modal For Add New User 
+    function AddNewUser(UserId) {
+        $("#form")[0].reset();
+        $("#ModalTitle").html("Add New User");
+        $("#myModal").modal();
+    }
+
+    function EditUserRecord(userId) {
+        var url = "/Home/GetUserById?userId=" + userId;
+        $("#ModalTitle").html("Updarte User Record");
+        $("#myModal").modal();
+        $.ajax({
+            type: "Get",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#userId").val(obj.userId);
+                $("#userName").val(obj.userName);
+                $("#userEmail").val(obj.userEmail);
+                $("#userPassword").val(obj.userPassword);
+                $("#status").val(obj.status);
+                $("#DropDown option:selected").text(obj.tblDesignation.designationName);
+            }
+           
+        })
+    }
+    $("#SaveUserRecord").click(function () {
+        var data = $("#SubmitForm").serialize();
+        $.ajax({
+            type: "Post",
+            url: "/Home/SaveUser",
+            data: data,
+            success: function (result) {
+                alert("Success!..");
+                window.location.href = "/Home/index";
+                $("#myModal").modal("hide");
+            }
+        })
+    })
+
+
 </script>
