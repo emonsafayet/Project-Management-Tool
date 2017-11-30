@@ -10,6 +10,7 @@ CREATE TABLE tblUser (
 	userEmail varchar(50) NULL,
 	userPassword varchar(50) NULL,
 	status bit,
+	isDeleted bit,
 	 designationId int FOREIGN KEY REFERENCES tblDesignation(designationId)
 )
 
