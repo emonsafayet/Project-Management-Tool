@@ -26,6 +26,7 @@
     <EntitySetMapping Name="tblUsers">
       <EntityTypeMapping TypeName="ManagmentToolModel.tblUser">
         <MappingFragment StoreEntitySet="tblUser">
+          <ScalarProperty Name="isDeleted" ColumnName="isDeleted" />
           <ScalarProperty Name="userId" ColumnName="userId" />
           <ScalarProperty Name="userName" ColumnName="userName" />
           <ScalarProperty Name="userEmail" ColumnName="userEmail" />

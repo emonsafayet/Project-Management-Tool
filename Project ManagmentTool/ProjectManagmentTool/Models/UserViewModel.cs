@@ -13,6 +13,7 @@ namespace ProjectManagmentTool.Models
         public string userPassword { get; set; }
         public bool status { get; set; }
         public Nullable<int> designationId { get; set; }
+        public Nullable<bool> isDeleted { get; set; }
         public string designationName { get; set; }
 
 

@@ -19,7 +19,7 @@ namespace ProjectManagmentTool.Controllers
         }
         public JsonResult GetUserList ()
         {
-            List<UserViewModel> UserList = db.tblUsers.Select(x => new UserViewModel
+            List<UserViewModel> UserList = db.tblUsers.Where(x=>x.isDeleted == false).Select(x => new UserViewModel
             {
                 userId = x.userId,
                 userName = x.userName,
@@ -30,6 +30,7 @@ namespace ProjectManagmentTool.Controllers
                 designationName = x.tblDesignation.designationName
 
             }).ToList();
+            
             return Json(UserList, JsonRequestBehavior.AllowGet);
         }   
         /// <summary>
@@ -46,6 +47,11 @@ namespace ProjectManagmentTool.Controllers
             });
             return Json(value, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public JsonResult SaveUser(UserViewModel model)
         {
             var result = false;
@@ -53,8 +59,8 @@ namespace ProjectManagmentTool.Controllers
             {
                 if(model.userId>0)
                 {
-                    tblUser u = db.tblUsers.SingleOrDefault(x => x.status == true && x.userId == model.userId);
-                        u.userName = model.userName;
+                    tblUser u = db.tblUsers.SingleOrDefault(x => x.isDeleted == false && x.userId == model.userId);
+                    u.userName = model.userName;
                     u.userEmail = model.userEmail;
                     u.userPassword = model.userPassword;
                     u.status = model.status;
@@ -69,6 +75,7 @@ namespace ProjectManagmentTool.Controllers
                     u.userEmail = model.userEmail;
                     u.userPassword = model.userPassword;
                     u.status = model.status;
+                    u.isDeleted = false;
                     u.designationId = model.designationId;
                     db.tblUsers.Add(u);
                     db.SaveChanges();
@@ -80,6 +87,22 @@ namespace ProjectManagmentTool.Controllers
                 throw ex;
             }
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+       /// <summary>
+       /// Delete user informations
+       /// </summary>
+       /// <returns></returns>
+        public JsonResult DeleteUserRecord(int userId)
+        {
+            bool result = false;
+            tblUser us = db.tblUsers.SingleOrDefault(x =>x.isDeleted == false && x.userId == userId);
+            if (us != null)
+            {
+                us.isDeleted = true;
+                db.SaveChanges();
+                result = true;
+            }
+            return Json(result,JsonRequestBehavior.AllowGet);
         }
 
     }

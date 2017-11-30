@@ -1,6 +1,6 @@
 ﻿@model  ProjectManagmentTool.Models.UserViewModel
 @{
-    Layout = null;
+    ViewBag.Title = "Home Page";
 }
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
@@ -11,9 +11,11 @@
     <table class="table table-striped">
         <thead>
             <tr row="1">
+                <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Designation</th>
+                <th>Status</th>
                 <th>Action(Edit)</th>
                 <th>Action(Delete)</th>
             </tr>
@@ -22,6 +24,7 @@
             <tr id="LoadingStatus"></tr>
         </tbody>
     </table>
+    @*Create A PopUp With Registation Form For Add Or Edit User Record*@
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -38,7 +41,7 @@
                             </div>
                             <div class="form-group">
                                 @Html.TextBoxFor(m => m.userEmail, new { @id = "userEmail", @class = "form-controler", @placeholder = "email*" })
-                            </div>                            
+                            </div>
                             <div class="form-group">
                                 @Html.PasswordFor(m => m.userPassword, new { @id = "userPassword", @class = "form-controler", @placeholder = "userPassword*" })
                             </div>
@@ -46,15 +49,33 @@
                                 <span>Active/Deactive</span>@Html.CheckBoxFor(m => m.status, new { @checked = "status", @class = "form-controler" } )
                             </div>
                             <div class="form-group">
-                               @Html.DropDownListFor(m=>m.designationId,ViewBag.ListOfDesignation as SelectList,"--Select Designation--",new { @id="DropDown",@class="form-control" })
+                                @Html.DropDownListFor(m=>m.designationId,ViewBag.ListOfDesignation as SelectList,"--Select Designation--",new { @id="DropDown",@class="form-control" })
                             </div>
                             <div class="form-group">
-                               <a href="#" class="btn btn-block btn-danger" id="SaveUserRecord">Save</a>
+                                <a href="#" class="btn btn-block btn-danger" id="SaveUserRecord">Save</a>
                             </div>
                         </fieldset>
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    @*Create A PopUp Model For DeleteConfirmation*@
+    <div class="modal fade" id="DeleteConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                     <a href="#" class="close" data-dismiss="modal">&times;</a>   
+                    <h4>Delete User Record</h4>
+            </div>
+                <div class="modal-body">
+                    <h4>Are You Sure? You Want to Delete This Record.</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Cancel</a>
+                    <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm</a>
+                    </div>
         </div>
     </div>
 </div>
@@ -65,21 +86,24 @@
         var SetData = $("#SetUserList");
         for (var i = 0; i < UserList.length; i++) {
             var Data = "<tr class ='row_ " + UserList[i].userId + "' >" +
+                "<td>" + UserList[i].userId + "</td>" +
                 "<td>" + UserList[i].userName + "</td>" +
                 "<td>" + UserList[i].userEmail + "</td>" +
                 "<td>" + UserList[i].designationName + "</td>" +
                 //"<td>" + UserList[i].userPassword + "</td>" +
-                //"<td>" + UserList[i].status + "</td>" +              
-                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditUserRecord(" + UserList[i].userId +")'><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
-                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteUserRecord(" + UserList[i].userId +")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
+                "<td>" + UserList[i].status + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-warning' onclick='EditUserRecord(" + UserList[i].userId + ")'><span class='glyphicon glyphicon-edit'></span></a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeleteUserRecord(" + UserList[i].userId + ")'><span class='glyphicon glyphicon-trash'></span></a>" + "</td>" +
                 "</tr>";
             SetData.append(Data);
             $('#LoadingStatus').html(" ");
         }
     }
-    //show The popUp Modal For Add New User 
+    //show The popUp Modal For Add New User
     function AddNewUser(UserId) {
         $("#form")[0].reset();
+        $("#userId").val(0);
+        $("#DropDown option:selected").text("--Select Designation--");
         $("#ModalTitle").html("Add New User");
         $("#myModal").modal();
     }
@@ -99,8 +123,9 @@
                 $("#userPassword").val(obj.userPassword);
                 $("#status").val(obj.status);
                 $("#DropDown option:selected").text(obj.tblDesignation.designationName);
+                $("#DropDown option:selected").val(obj.designationId);
             }
-           
+
         })
     }
     $("#SaveUserRecord").click(function () {
@@ -117,5 +142,22 @@
         })
     })
 
+    //Show The PopUp Modal For Delete Confirmation
+    function DeleteUserRecord(userId) {
+        $("#userId").val(userId);
+        $("#DeleteConfirmation").modal("show")
+    }
+    function ConfirmDelete() {
+       var userId= $("#userId").val();
+        $.ajax({           
+            type: "POST",
+            url: "/Home/DeleteUserRecord?userId=" + userId,
+            success: function (result) {
+                $("#DeleteConfirmation").modal("hide");
+                $(".row_" + userId).remove();
+                window.location.href = "/Home/index";
+            }
 
+        })
+    }
 </script>

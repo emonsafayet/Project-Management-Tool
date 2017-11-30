@@ -32,6 +32,7 @@
     <Property Name="status" Type="Boolean" />
     <Property Name="designationId" Type="Int32" />
     <NavigationProperty Name="tblDesignation" Relationship="Self.FK__tblUser__designa__1B0907CE" FromRole="tblUser" ToRole="tblDesignation" />
+    <Property Name="isDeleted" Type="Boolean" />
   </EntityType>
   <Association Name="FK__tblUser__designa__1B0907CE">
     <End Role="tblDesignation" Type="Self.tblDesignation" Multiplicity="0..1" />
